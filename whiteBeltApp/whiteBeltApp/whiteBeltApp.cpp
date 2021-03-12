@@ -1,11 +1,22 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 int main()
 {
-    int a, b;
+    string a, b, c;
 
-    cin >> a >> b;
+    cin >> a >> b >> c;
+
+    if (a < b && a < c)
+    {
+        cout << a;
+    }
+    else if (b < c && b < a)
+    {
+        cout << b;
+    }
+    else cout << c;
        
-    cout << a + b;
+    return 0;
 }
