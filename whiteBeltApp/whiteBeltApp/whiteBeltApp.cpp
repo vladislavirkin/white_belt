@@ -1,22 +1,34 @@
 #include <iostream>
-#include <string>
+#include <cmath>
+
 using namespace std;
 
-int main()
+int main() 
 {
-    string a, b, c;
+    double A, B, C;
+    cin >> A >> B >> C;
 
-    cin >> a >> b >> c;
+    double D = B * B - 4 * A * C;
+    
+    if (A == 0) 
+    {     
+        if (B != 0) 
+        {
+            cout << -C / B << endl;
+        }     
 
-    if (a < b && a < c)
-    {
-        cout << a;
     }
-    else if (b < c && b < a)
-    {
-        cout << b;
+    else if (D == 0) 
+    { 
+        cout << -B / (2 * A) << endl;
     }
-    else cout << c;
-       
+    else if (D > 0) 
+    { 
+        double r1 = (-B + sqrt(D)) / (2 * A);
+        double r2 = (-B - sqrt(D)) / (2 * A);
+
+        cout << r1 << " " << r2 << endl;
+    }
+
     return 0;
 }
