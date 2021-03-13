@@ -1,14 +1,32 @@
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 int main() {
-    int a, b;
-    cin >> a >> b;
-    for (int i = a; i <= b; ++i) {
-        if (i % 2 == 0) {
-            cout << i << ' ';
+    string str;
+    cin >> str;
+
+    int counter = -2;
+
+    for (int i = 0; i < str.size(); ++i)
+    {
+        if (str[i] == 'f')
+        {
+            ++counter;
         }
+
+        if (counter == 0)
+        {
+            cout << i;
+            break;
+        }            
+    }   
+
+    if (counter < 0)
+    {
+        cout << counter;
     }
+
     return 0;
 }
