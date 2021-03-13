@@ -1,27 +1,31 @@
+// Реализуйте функцию void Reverse(vector<int>& v), 
+// которая переставляет элементы вектора в обратном порядке.
+
 #include <iostream>
 #include <vector>
 #include <string>
 
 using namespace std;
 
-void MoveStrings(vector<string>& source, vector<string>& destination)
+void Reverse(vector<int>& numbers)
 {
-    for (auto str : source)
+    int tmp;
+    for (int i = 0; i < numbers.size() / 2; ++i)
     {
-        destination.push_back(str);
-    }
-    source.clear();
+        tmp = numbers[i];
+        numbers[i] = numbers[numbers.size() - 1 - i];
+        numbers[numbers.size() - 1 - i] = tmp;
+    }    
 }
 
 int main() 
 {
-    vector<string> source = { "a", "b", "c" };
-    vector<string> destination = { "z" };
+    vector<int> numbers = { 1, 2, 3, 4 , 5, 6 };
 
-    MoveStrings(source, destination);
+    Reverse(numbers);
 
-    for (auto str : destination)
-        cout << str;
+    for (auto number : numbers)
+        cout << number;
 
     return 0;
 }
