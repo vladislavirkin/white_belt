@@ -1,47 +1,69 @@
-//Даны значения температуры, наблюдавшиеся в течение N подряд идущих дней.
-//Найдите номера дней(в нумерации с нуля) со значением температуры выше среднего арифметического за все N дней.
-//Гарантируется, что среднее арифметическое значений температуры является целым числом.
+//Люди стоят в очереди, но никогда не уходят из её начала, зато могут приходить в конец и уходить оттуда.Более того, иногда некоторые люди могут прекращать и начинать беспокоиться из - за того, что очередь не продвигается.
+//
+//Будем считать, что люди в очереди нумеруются целыми числами, начиная с 0.
+//
+//Реализуйте обработку следующих операций над очередью :
+//
+//WORRY i : пометить i - го человека с начала очереди как беспокоящегося;
+//QUIET i : пометить i - го человека как успокоившегося;
+//COME k : добавить k спокойных человек в конец очереди;
+//COME - k: убрать k человек из конца очереди;
+//WORRY_COUNT: узнать количество беспокоящихся людей в очереди.
+//
+//Изначально очередь пуста.
 //Формат ввода
-//Вводится число n, затем n неотрицательных целых чисел — значения температуры в 0-ой, 1-ый .. (n-1)-ый день.
+//
+//Количество операций Q, затем описания операций.
+//
+//Для каждой операции WORRY i и QUIET i гарантируется, что человек с номером i существует в очереди на момент операции.
+//
+//Для каждой операции COME - k гарантируется, что k не больше текущего размера очереди.
 //Формат вывода
-//Первое число K — количество дней, значение температуры в которых выше среднего арифметического. 
-//Затем K целых чисел — номера этих дней.
+//
+//Для каждой операции WORRY_COUNT выведите одно целое число — количество беспокоящихся людей в очереди.
 
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
 int main() 
 {
-    int n;
-    cin >> n;
-    vector<int> temperatures(n);
-    int sum = 0;
-    for (int& temperature : temperatures) 
-    {
-        cin >> temperature;
-        sum += temperature;
-    }
+    int q;
+    cin >> q;
+    vector<bool> is_nervous;
 
-    int average = sum / n;
-    vector<int> result_indices;
-    for (int i = 0; i < n; ++i) 
+    for (int i = 0; i < q; ++i) 
     {
-        if (temperatures[i] > average) 
+        string operation_code;
+        cin >> operation_code;
+
+        if (operation_code == "WORRY_COUNT") 
+        {       
+            cout << count(begin(is_nervous), end(is_nervous), true) << endl;
+        }
+        else 
         {
-            result_indices.push_back(i);
+            if (operation_code == "WORRY" || operation_code == "QUIET") 
+            {
+
+                int person_index;
+                cin >> person_index;
+         
+                is_nervous[person_index] = (operation_code == "WORRY");
+
+            }
+            else if (operation_code == "COME") 
+            {
+                int person_count;
+                cin >> person_count;
+             
+                is_nervous.resize(is_nervous.size() + person_count, false);
+            }
         }
     }
-
-    cout << result_indices.size() << endl;
-    for (int result_index : result_indices) 
-    {
-        cout << result_index << " ";
-    }
-
-    cout << endl;
 
     return 0;
 }
