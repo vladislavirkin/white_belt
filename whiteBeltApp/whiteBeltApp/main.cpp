@@ -1,5 +1,11 @@
-// Реализуйте функцию vector<int> Reversed(const vector<int>& v), возвращающую копию вектора v, 
-// в которой числа переставлены в обратном порядке.
+//Даны значения температуры, наблюдавшиеся в течение N подряд идущих дней.
+//Найдите номера дней(в нумерации с нуля) со значением температуры выше среднего арифметического за все N дней.
+//Гарантируется, что среднее арифметическое значений температуры является целым числом.
+//Формат ввода
+//Вводится число n, затем n неотрицательных целых чисел — значения температуры в 0-ой, 1-ый .. (n-1)-ый день.
+//Формат вывода
+//Первое число K — количество дней, значение температуры в которых выше среднего арифметического. 
+//Затем K целых чисел — номера этих дней.
 
 #include <iostream>
 #include <vector>
@@ -7,27 +13,35 @@
 
 using namespace std;
 
-vector<int> Reversed(const vector<int>& numbers)
-{
-    int tmp;
-    vector<int> result;
-
-    for (int i = numbers.size() - 1; i >= 0; --i)
-    {
-        result.push_back(numbers[i]);       
-    }
-
-    return result;
-}
-
 int main() 
 {
-    vector<int> numbers = { 1, 2, 3, 4 , 5, 6 };
+    int n;
+    cin >> n;
+    vector<int> temperatures(n);
+    int sum = 0;
+    for (int& temperature : temperatures) 
+    {
+        cin >> temperature;
+        sum += temperature;
+    }
 
-    numbers = Reversed(numbers);
+    int average = sum / n;
+    vector<int> result_indices;
+    for (int i = 0; i < n; ++i) 
+    {
+        if (temperatures[i] > average) 
+        {
+            result_indices.push_back(i);
+        }
+    }
 
-    for (auto number : numbers)
-        cout << number;
+    cout << result_indices.size() << endl;
+    for (int result_index : result_indices) 
+    {
+        cout << result_index << " ";
+    }
+
+    cout << endl;
 
     return 0;
 }
