@@ -1,5 +1,5 @@
-// Реализуйте функцию void Reverse(vector<int>& v), 
-// которая переставляет элементы вектора в обратном порядке.
+// Реализуйте функцию vector<int> Reversed(const vector<int>& v), возвращающую копию вектора v, 
+// в которой числа переставлены в обратном порядке.
 
 #include <iostream>
 #include <vector>
@@ -7,22 +7,24 @@
 
 using namespace std;
 
-void Reverse(vector<int>& numbers)
+vector<int> Reversed(const vector<int>& numbers)
 {
     int tmp;
-    for (int i = 0; i < numbers.size() / 2; ++i)
+    vector<int> result;
+
+    for (int i = numbers.size() - 1; i >= 0; --i)
     {
-        tmp = numbers[i];
-        numbers[i] = numbers[numbers.size() - 1 - i];
-        numbers[numbers.size() - 1 - i] = tmp;
-    }    
+        result.push_back(numbers[i]);       
+    }
+
+    return result;
 }
 
 int main() 
 {
     vector<int> numbers = { 1, 2, 3, 4 , 5, 6 };
 
-    Reverse(numbers);
+    numbers = Reversed(numbers);
 
     for (auto number : numbers)
         cout << number;
