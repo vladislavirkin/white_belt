@@ -3,30 +3,28 @@
 
 using namespace std;
 
-int Factorial(const int number)
+bool IsPalindrom(const string str)
 {
-    if (number < 0)
+    int size = str.size();
+    for (int i = 0; i < size / 2 + 1; i++)
     {
-        return 1;
+        if (str[i] != str[size - 1 - i])
+            return false;
     }
 
-    int fact = 1;
-
-    for (size_t i = 1; i <= number; i++)
-    {
-        fact *= i;
-    }
-
-    return fact;
+    return true;
 }
 
 int main() 
 {
-    int n;
+    string str;
 
-    cin >> n;
+    cin >> str;
 
-    cout << Factorial(n);
+    if (IsPalindrom(str))
+        cout << "true";
+    else
+        cout << "false";
 
     return 0;
 }
