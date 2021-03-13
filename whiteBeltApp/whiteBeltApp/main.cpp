@@ -1,24 +1,14 @@
 #include <iostream>
+
 using namespace std;
 
-int main() 
-{
-    double n, a, x, b, y;
-
-    cin >> n >> a >> b >> x >> y;
-
-    if (n > b)
-    {
-        cout << n * (1 - y / 100);
-    } 
-    else if (n > a)
-    {        
-        cout << n * (1 - x / 100);
+int main() {
+    int a, b;
+    cin >> a >> b;
+    for (int i = a; i <= b; ++i) {
+        if (i % 2 == 0) {
+            cout << i << ' ';
+        }
     }
-    else
-    {
-        cout << n;
-    }
-
     return 0;
 }
