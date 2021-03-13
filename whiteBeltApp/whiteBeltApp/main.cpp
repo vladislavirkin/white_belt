@@ -1,32 +1,21 @@
 #include <iostream>
-#include <string>
 
 using namespace std;
 
 int main() {
-    string str;
-    cin >> str;
+    int a, b;
 
-    int counter = -2;
+    cin >> a >> b;
 
-    for (int i = 0; i < str.size(); ++i)
+    while (a > 0 && b > 0)
     {
-        if (str[i] == 'f')
-        {
-            ++counter;
-        }
-
-        if (counter == 0)
-        {
-            cout << i;
-            break;
-        }            
-    }   
-
-    if (counter < 0)
-    {
-        cout << counter;
+        if (a > b)
+            a = a % b;
+        else
+            b = b % a;
     }
+
+    cout << a + b;
 
     return 0;
 }
