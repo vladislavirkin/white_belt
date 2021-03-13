@@ -1,22 +1,27 @@
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-void UpdateIfGreater(int first, int& second)
+void MoveStrings(vector<string>& source, vector<string>& destination)
 {
-    if (first > second)
-        second = first;
+    for (auto str : source)
+    {
+        destination.push_back(str);
+    }
+    source.clear();
 }
 
 int main() 
 {
-    int a, b;
+    vector<string> source = { "a", "b", "c" };
+    vector<string> destination = { "z" };
 
-    cin >> a >> b;
+    MoveStrings(source, destination);
 
-    UpdateIfGreater(a, b);
-
-    cout << b;
+    for (auto str : destination)
+        cout << str;
 
     return 0;
 }
