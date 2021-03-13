@@ -1,21 +1,25 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 int main() {
-    int a, b;
+    int n;
 
-    cin >> a >> b;
+    cin >> n;
 
-    while (a > 0 && b > 0)
+    vector<int> result;
+
+    while (n > 0)
     {
-        if (a > b)
-            a = a % b;
-        else
-            b = b % a;
+        result.push_back(n % 2);
+        n /= 2;        
     }
 
-    cout << a + b;
+    for (int i = result.size() - 1; i >= 0; --i)
+    {
+        cout << result[i];
+    }
 
     return 0;
 }
