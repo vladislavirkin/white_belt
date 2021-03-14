@@ -1,27 +1,50 @@
-//Слова называются анаграммами друг друга, если одно из них можно получить перестановкой букв в другом.
-//Например, слово «eat» можно получить перестановкой букв слова «tea», 
-//поэтому эти слова являются анаграммами друг друга.Даны пары слов, проверьте для каждой из них, 
-//являются ли слова этой пары анаграммами друг друга.
+//Реализуйте справочник столиц стран.
 //
-//Указание
+//На вход программе поступают следующие запросы :
 //
-//Один из способов проверки того, являются ли слова анаграммами друг друга, заключается в следующем.
-//Для каждого слова с помощью словаря подсчитаем, сколько раз в нём встречается каждая буква.
-//Если для обоих слов эти словари равны(а это проверяется с помощью обычного оператора == ), 
-//то слова являются анаграммами друг друга, в противном случае не являются.
+//CHANGE_CAPITAL country new_capital — 
+//изменение столицы страны country на new_capital, либо добавление такой страны с такой столицей, 
+//если раньше её не было.
+//RENAME old_country_name new_country_name — переименование страны из old_country_name в new_country_name.
+//ABOUT country — вывод столицы страны country.
+//DUMP — вывод столиц всех стран.
 //
-//При этом построение такого словаря по слову удобно вынести в отдельную функцию BuildCharCounters.
 //Формат ввода
 //
-//Сначала дано число пар слов N, затем в N строках содержатся пары слов, которые необходимо проверить.
-//Гарантируется, что все слова состоят лишь из строчных латинских букв.
+//В первой строке содержится количество запросов Q, в следующих Q строках — описания запросов.
+//Все названия стран и столиц состоят лишь из латинских букв, цифр и символов подчёркивания.
 //Формат вывода
 //
-//Выведите N строк : для каждой введённой пары слов YES, если эти слова являются анаграммами,
-//и NO в противном случае.
+//Выведите результат обработки каждого запроса :
+//В ответ на запрос CHANGE_CAPITAL country new_capital выведите
+//
+//Introduce new country country with capital new_capital, если страны country раньше не существовало;
+//Country country hasn't changed its capital, если страна country до текущего момента имела столицу new_capital;
+//Country country has changed its capital from old_capital to new_capital, если страна country до 
+//текущего момента имела столицу old_capital, название которой не совпадает с названием new_capital.
+//
+//В ответ на запрос RENAME old_country_name new_country_name выведите
+//
+//Incorrect rename, skip, если новое название страны совпадает со старым, страна old_country_name 
+//не существует или страна new_country_name уже существует;
+//Country old_country_name with capital capital has been renamed to new_country_name, если запрос корректен 
+//и страна имеет столицу capital.
+//
+//В ответ на запрос ABOUT country выведите
+//
+//Country country doesn't exist, если страны с названием country не существует;
+//Country country has capital capital, если страна country существует и имеет столицу capital.
+//
+//В ответ на запрос DUMP выведите
+//
+//There are no countries in the world, если пока не было добавлено ни одной страны;
+//последовательность пар вида country / capital, описывающую столицы всех стран, 
+//если в мире уже есть хотя бы одна страна.При выводе последовательности пары указанного вида необходимо упорядочить 
+//по названию страны и разделять между собой пробелом.
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <map>
 
 using namespace std;
@@ -34,24 +57,61 @@ map<char, int> buildCharCounters(const string& word) {
     return result;
 }
 
+void printMap(const map<string, string>& m) {
+    for (auto& item : m) {
+        cout << item.first << " " << item.second << endl;
+    }
+}
+
 int main() {
     int q;
     cin >> q;
 
-    for (int i = 0; i < q; ++i) 
-    {
-        string first, second;
-        cin >> first >> second;
+    map<string, string> countries;
 
-        map<char, int> first_map, second_map;
+    for (int i = 0; i < q; ++i) {
+        string cmd;
+        cin >> cmd;
 
-        first_map = buildCharCounters(first);
-        second_map = buildCharCounters(second);
- 
-        if (first_map == second_map)
-            cout << "YES" << endl;
-        else
-            cout << "NO" << endl;
+        if (cmd == "DUMP") {                   
+            if (countries.size() == 0) {                
+                cout << "There are no countries in the world" << endl;                
+            }
+            else {
+                printMap(countries);
+            }
+        }
+        else {
+            if (cmd == "ADD") {
+                int day;
+                cin >> day;
+                day -= 1;               
+
+                string task;
+                cin >> task;
+
+                if (day < tasks.size())
+                    tasks[day].push_back(task);
+            }
+            else if (cmd == "NEXT") 
+            {
+                int current_count = day_in_months[current_month];
+                current_month++;
+                if (current_month >= 12)
+                    current_month %= 12;
+
+                int next_count = day_in_months[current_month];                
+                
+                if (current_count > next_count)
+                {                    
+                    for (int i = next_count; i < current_count; i++)
+                    {
+                        tasks[next_count - 1].insert(end(tasks[next_count-1]), begin(tasks[i]), end(tasks[i]));
+                    }                    
+                }    
+                tasks.resize(next_count);
+            }
+        }
     }
 
     return 0;
