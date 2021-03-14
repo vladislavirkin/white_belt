@@ -59,7 +59,7 @@ map<char, int> buildCharCounters(const string& word) {
 
 void printMap(const map<string, string>& m) {
     for (auto& item : m) {
-        cout << item.first << " " << item.second << endl;
+        cout << item.first << "/" << item.second << " ";
     }
 }
 
@@ -82,16 +82,14 @@ int main() {
             }
         }
         else {
-            if (cmd == "ADD") {
-                int day;
-                cin >> day;
-                day -= 1;               
+            if (cmd == "ABOUT") {
+                string country;
+                cin >> country;                                          
 
-                string task;
-                cin >> task;
-
-                if (day < tasks.size())
-                    tasks[day].push_back(task);
+                if (countries.count(country) > 0)
+                    cout << "Country " << country << " has capital " << countries[country] << endl;                    
+                else
+                    cout << "Country country doesn't exist" << endl;
             }
             else if (cmd == "NEXT") 
             {
