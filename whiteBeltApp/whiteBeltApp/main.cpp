@@ -58,9 +58,10 @@ map<char, int> buildCharCounters(const string& word) {
 }
 
 void printMap(const map<string, string>& m) {
-    for (auto& item : m) {
+    for (const auto& item : m) {
         cout << item.first << "/" << item.second << " ";
     }
+    cout << endl;
 }
 
 int main() {
@@ -68,13 +69,14 @@ int main() {
     cin >> q;
 
     map<string, string> countries;
+    string country, capital;
+    string cmd;
 
-    for (int i = 0; i < q; ++i) {
-        string cmd;
+    for (int i = 0; i < q; ++i) {        
         cin >> cmd;
 
         if (cmd == "DUMP") {                   
-            if (countries.size() == 0) {                
+            if (countries.empty()) {                
                 cout << "There are no countries in the world" << endl;                
             }
             else {
@@ -82,33 +84,52 @@ int main() {
             }
         }
         else {
-            if (cmd == "ABOUT") {
-                string country;
+            if (cmd == "ABOUT") {                
                 cin >> country;                                          
 
-                if (countries.count(country) > 0)
+                if (countries.count(country) == 1)
                     cout << "Country " << country << " has capital " << countries[country] << endl;                    
                 else
-                    cout << "Country country doesn't exist" << endl;
+                    cout << "Country " << country << " doesn't exist" << endl;
             }
-            else if (cmd == "NEXT") 
-            {
-                int current_count = day_in_months[current_month];
-                current_month++;
-                if (current_month >= 12)
-                    current_month %= 12;
+            else {
+                if (cmd == "CHANGE_CAPITAL") {
+                    cin >> country >> capital;
 
-                int next_count = day_in_months[current_month];                
-                
-                if (current_count > next_count)
-                {                    
-                    for (int i = next_count; i < current_count; i++)
-                    {
-                        tasks[next_count - 1].insert(end(tasks[next_count-1]), begin(tasks[i]), end(tasks[i]));
-                    }                    
-                }    
-                tasks.resize(next_count);
+                    if (countries.count(country) == 0) {
+                        cout << "Introduce new country " << country << " with capital " << capital << endl;
+                        countries[country] = capital;
+                    }
+                    else {
+                        if (countries[country] == capital) {
+                            cout << "Country " << country << " hasn't changed its capital" << endl;
+                        }
+                        else {
+                            cout << "Country " << country << " has changed its capital from "
+                                << countries[country] << " to " << capital << endl;
+                            countries[country] = capital;
+                        }
+                    }
+                }
+                else {
+                    if (cmd == "RENAME") {
+                        string old_name, new_name;
+                        cin >> old_name >> new_name;
+
+                        if (old_name == new_name || (countries.count(new_name) == 1) ||
+                            (countries.count(old_name) == 0)) {
+                            cout << "Incorrect rename, skip" << endl;
+                        }
+                        else {
+                            cout << "Country " << old_name << " with capital "
+                                << countries[old_name] << " has been renamed to " << new_name << endl;
+                            countries[new_name] = countries[old_name];
+                            countries.erase(old_name);
+                        }
+                    }
+                }
             }
+            
         }
     }
 
