@@ -1,46 +1,42 @@
-//Реализуйте справочник столиц стран.
+//Реализуйте систему хранения автобусных маршрутов.Вам нужно обрабатывать следующие запросы :
 //
-//На вход программе поступают следующие запросы :
+//NEW_BUS bus stop_count stop1 stop2 ... — добавить маршрут автобуса с названием bus и stop_count 
+//остановками с названиями stop1, stop2, ...
 //
-//CHANGE_CAPITAL country new_capital — 
-//изменение столицы страны country на new_capital, либо добавление такой страны с такой столицей, 
-//если раньше её не было.
-//RENAME old_country_name new_country_name — переименование страны из old_country_name в new_country_name.
-//ABOUT country — вывод столицы страны country.
-//DUMP — вывод столиц всех стран.
+//BUSES_FOR_STOP stop — вывести названия всех маршрутов автобуса, проходящих через остановку stop.
+//
+//STOPS_FOR_BUS bus — вывести названия всех остановок маршрута bus со списком автобусов, 
+//на которые можно пересесть на каждой из остановок.
+//
+//ALL_BUSES — вывести список всех маршрутов с остановками.
 //
 //Формат ввода
 //
-//В первой строке содержится количество запросов Q, в следующих Q строках — описания запросов.
-//Все названия стран и столиц состоят лишь из латинских букв, цифр и символов подчёркивания.
+//В первой строке ввода содержится количество запросов Q, затем в Q строках следуют описания запросов.
+//
+//Гарантируется, что все названия маршрутов и остановок состоят лишь из латинских букв, цифр и знаков подчёркивания.
+//
+//Для каждого запроса NEW_BUS bus stop_count stop1 stop2 ... гарантируется, что маршрут bus отсутствует, 
+//количество остановок больше 0, а после числа stop_count следует именно такое количество названий остановок, 
+//причём все названия в каждом списке различны.
 //Формат вывода
 //
-//Выведите результат обработки каждого запроса :
-//В ответ на запрос CHANGE_CAPITAL country new_capital выведите
+//Для каждого запроса, кроме NEW_BUS, выведите соответствующий ответ на него :
 //
-//Introduce new country country with capital new_capital, если страны country раньше не существовало;
-//Country country hasn't changed its capital, если страна country до текущего момента имела столицу new_capital;
-//Country country has changed its capital from old_capital to new_capital, если страна country до 
-//текущего момента имела столицу old_capital, название которой не совпадает с названием new_capital.
+//На запрос BUSES_FOR_STOP stop выведите через пробел список автобусов, проезжающих через эту остановку, 
+//в том порядке, в котором они создавались командами NEW_BUS.Если остановка stop не существует, выведите No stop.
 //
-//В ответ на запрос RENAME old_country_name new_country_name выведите
+//На запрос STOPS_FOR_BUS bus выведите описания остановок маршрута bus в отдельных строках в том порядке, 
+//в котором они были заданы в соответствующей команде NEW_BUS.
+//Описание каждой остановки stop должно иметь вид Stop stop : bus1 bus2 ..., где bus1 bus2 ... — 
+//список автобусов, проезжающих через остановку stop, в порядке, в котором они создавались командами NEW_BUS, 
+//за исключением исходного маршрута bus.Если через остановку stop не проезжает ни один автобус, кроме bus, 
+//вместо списка автобусов для неё выведите no interchange.Если маршрут bus не существует, выведите No bus.
 //
-//Incorrect rename, skip, если новое название страны совпадает со старым, страна old_country_name 
-//не существует или страна new_country_name уже существует;
-//Country old_country_name with capital capital has been renamed to new_country_name, если запрос корректен 
-//и страна имеет столицу capital.
-//
-//В ответ на запрос ABOUT country выведите
-//
-//Country country doesn't exist, если страны с названием country не существует;
-//Country country has capital capital, если страна country существует и имеет столицу capital.
-//
-//В ответ на запрос DUMP выведите
-//
-//There are no countries in the world, если пока не было добавлено ни одной страны;
-//последовательность пар вида country / capital, описывающую столицы всех стран, 
-//если в мире уже есть хотя бы одна страна.При выводе последовательности пары указанного вида необходимо упорядочить 
-//по названию страны и разделять между собой пробелом.
+//На запрос ALL_BUSES выведите описания всех автобусов в алфавитном порядке.
+//Описание каждого маршрута bus должно иметь вид Bus bus : stop1 stop2 ..., где stop1 stop2 ... 
+//— список остановок автобуса bus в порядке, в котором они были заданы в соответствующей команде NEW_BUS.
+//Если автобусы отсутствуют, выведите No buses.
 
 #include <iostream>
 #include <string>
@@ -49,82 +45,97 @@
 
 using namespace std;
 
-map<char, int> buildCharCounters(const string& word) {
-    map<char, int> result;
-    for (const auto& ch : word) {
-        ++result[ch];
-    }
-    return result;
-}
-
-void printMap(const map<string, string>& m) {
+void printMap(const map<string, vector<string>>& m, const string& title = "", const string& check = "") {
     for (const auto& item : m) {
-        cout << item.first << "/" << item.second << " ";
+        if (title != "")
+            cout << title << " " << item.first << ": ";
+
+        if (check != "") {
+            bool flag = false;
+            for (const auto& el : item.second) {
+                if (el != check) {
+                    flag = true;
+                    cout << el << " ";
+                }             
+                if (!flag) {
+                    cout << "no interchange";
+                }
+            }
+        }
+        else {
+            for (const auto& el : item.second) {
+                cout << el << " ";
+            }
+        }        
     }
     cout << endl;
+}
+
+map<string, vector<string>> buildReversedMap(const map<string, vector<string>>& m) {
+    map<string, vector<string>> result;
+
+    for (const auto& item : m) {
+        for (const auto& stop : item.second) {            
+            result[stop].push_back(item.first);
+        }        
+    }
+
+    return result;
 }
 
 int main() {
     int q;
     cin >> q;
 
-    map<string, string> countries;
-    string country, capital;
-    string cmd;
+    map<string, vector<string>> buses;    
+    map<string, vector<string>> stops;
+    string cmd;    
+    string bus;
+    int stop_count;
+    string stop;
 
     for (int i = 0; i < q; ++i) {        
         cin >> cmd;
 
-        if (cmd == "DUMP") {                   
-            if (countries.empty()) {                
-                cout << "There are no countries in the world" << endl;                
-            }
+        if (cmd == "ALL_BUSES") {                   
+            if (!buses.empty()) {                
+                printMap(buses, "bus");
+            }    
             else {
-                printMap(countries);
+                cout << "No buses" << endl;
             }
         }
         else {
-            if (cmd == "ABOUT") {                
-                cin >> country;                                          
+            if (cmd == "BUSES_FOR_STOP") {                
+                cin >> stop;                                                          
 
-                if (countries.count(country) == 1)
-                    cout << "Country " << country << " has capital " << countries[country] << endl;                    
+                if (stops.count(stop) == 1)
+                    printMap(stops);
                 else
-                    cout << "Country " << country << " doesn't exist" << endl;
+                    cout << "No stop" << endl;
             }
             else {
-                if (cmd == "CHANGE_CAPITAL") {
-                    cin >> country >> capital;
+                if (cmd == "NEW_BUS") {
+                    cin >> bus >> stop_count;
 
-                    if (countries.count(country) == 0) {
-                        cout << "Introduce new country " << country << " with capital " << capital << endl;
-                        countries[country] = capital;
-                    }
-                    else {
-                        if (countries[country] == capital) {
-                            cout << "Country " << country << " hasn't changed its capital" << endl;
-                        }
-                        else {
-                            cout << "Country " << country << " has changed its capital from "
-                                << countries[country] << " to " << capital << endl;
-                            countries[country] = capital;
-                        }
-                    }
+                    if (buses.count(bus) != 0) {
+                        for (int i = 0; i < stop_count; ++i) {
+                            cin >> stop;
+                            buses[bus].push_back(stop);
+                        }                        
+                    }                    
+                    stops.clear();
+                    stops = buildReversedMap(buses);
                 }
                 else {
-                    if (cmd == "RENAME") {
-                        string old_name, new_name;
-                        cin >> old_name >> new_name;
+                    if (cmd == "STOPS_FOR_BUS") {
+                        cin >> bus;
 
-                        if (old_name == new_name || (countries.count(new_name) == 1) ||
-                            (countries.count(old_name) == 0)) {
-                            cout << "Incorrect rename, skip" << endl;
+                        if (buses.count(bus) == 0) {
+                            cout << "No bus" << endl;
                         }
-                        else {
-                            cout << "Country " << old_name << " with capital "
-                                << countries[old_name] << " has been renamed to " << new_name << endl;
-                            countries[new_name] = countries[old_name];
-                            countries.erase(old_name);
+                        else {                            
+                            printMap(stops, "Stop", bus);
                         }
                     }
                 }
