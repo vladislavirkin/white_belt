@@ -47,7 +47,20 @@ int main() {
         cin >> i;
     }
 
-    sort(begin(a), end(a), gtStrings);
+    sort(begin(a), end(a),
+        // компаратор дл€ сортировки Ч л€мбда-функци€, сравнивающа€ строки без учЄта регистра
+        [](const string& l, const string& r) {
+            // сравниваем лексикографически...
+            return lexicographical_compare(
+                // ... все символы строки l ...
+                begin(l), end(l),
+                // ... со всеми символами строки r ...
+                begin(r), end(r),
+                // ..., использу€ в качестве компаратора сравнение отдельных символов без учЄта регистра
+                [](char cl, char cr) { return tolower(cl) < tolower(cr); }
+            );
+        }
+    );
 
     printVector(a);
 
