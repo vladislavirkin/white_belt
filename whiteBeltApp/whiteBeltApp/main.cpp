@@ -1,68 +1,46 @@
-//Условие
-//
-//В стандартном потоке дана одна строка, состоящая из числа N и следующих за ним N строк S.
-//Между собой число и строки разделены пробелом.
-//
-//Отсортируйте строки S в лексикографическом порядке по возрастанию, игнорируя регистр букв, и 
-//выведите их в стандартный поток вывода.
-//
-//Ограничения
-//
-//0 <= N <= 1000
-//1 <= |S| <= 15
-//
-//Каждая строка S[i] может состоять из следующих символов : [0 - 9, a - z, A - Z]
+//Реализуйте класс, поддерживающий набор строк в отсортированном порядке.
+//Класс должен содержать два публичных метода :
+//void AddString(const string& s)
+//vector<string> GetSortedStrings()
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <stdio.h>
-#include <ctype.h>
 
 using namespace std;
 
-void printVector(const vector<string>& v) {
-    for (auto& i : v)
-    {
-        cout << i << " ";
+
+class SortedStrings {
+public:
+    void AddString(const string& s) {
+        strings.push_back(s);
     }
-}
+    vector<string> GetSortedStrings() {
+        sort(begin(strings), end(strings));
+        return strings;
+    }
+private:
+    vector<string> strings;
+};
 
-bool gtStrings(string first, string second) { 
-    transform(first.begin(), first.end(), first.begin(), ::tolower);
-    transform(second.begin(), second.end(), second.begin(), ::tolower);      
-
-    return first < second;
+void PrintSortedStrings(SortedStrings& strings) {
+    for (const string& s : strings.GetSortedStrings()) {
+        cout << s << " ";
+    }
+    cout << endl;
 }
 
 int main() {
-    int q;
-    cin >> q;
+    SortedStrings strings;
 
-    vector<string> a(q);
+    strings.AddString("first");
+    strings.AddString("third");
+    strings.AddString("second");
+    PrintSortedStrings(strings);
 
-    for (auto& i : a)
-    {
-        cin >> i;
-    }
-
-    sort(begin(a), end(a),
-        // компаратор для сортировки — лямбда-функция, сравнивающая строки без учёта регистра
-        [](const string& l, const string& r) {
-            // сравниваем лексикографически...
-            return lexicographical_compare(
-                // ... все символы строки l ...
-                begin(l), end(l),
-                // ... со всеми символами строки r ...
-                begin(r), end(r),
-                // ..., используя в качестве компаратора сравнение отдельных символов без учёта регистра
-                [](char cl, char cr) { return tolower(cl) < tolower(cr); }
-            );
-        }
-    );
-
-    printVector(a);
+    strings.AddString("second");
+    PrintSortedStrings(strings);
 
     return 0;
 }
