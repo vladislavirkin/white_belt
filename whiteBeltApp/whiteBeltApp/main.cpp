@@ -1,43 +1,50 @@
-//В стандартном потоке дана одна строка, состоящая из N + 1 целых чисел.
-//Первым числом идёт само число N.Далее следуют ещё N чисел, обозначим их за массив A.
-//Между собой числа разделены пробелом.
+//Условие
 //
-//Отсортируйте массив А по модулю и выведите его в стандартный поток.
+//В стандартном потоке дана одна строка, состоящая из числа N и следующих за ним N строк S.
+//Между собой число и строки разделены пробелом.
+//
+//Отсортируйте строки S в лексикографическом порядке по возрастанию, игнорируя регистр букв, и 
+//выведите их в стандартный поток вывода.
+//
 //Ограничения
 //
 //0 <= N <= 1000
-//- 1000000 <= A[i] <= 1000000
+//1 <= |S| <= 15
+//
+//Каждая строка S[i] может состоять из следующих символов : [0 - 9, a - z, A - Z]
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <ctype.h>
 
 using namespace std;
 
-void printVector(const vector<int>& v) {
+void printVector(const vector<char>& v) {
     for (auto& i : v)
     {
         cout << i << " ";
     }
 }
 
-bool gtByAbsoluteValue(int i, int j) { 
-    return (abs(i) < abs(j)); 
+bool gtStrings(const char& i, const char& j) { 
+    return (tolower(i) < tolower(j)); 
 }
 
 int main() {
     int q;
     cin >> q;
 
-    vector<int> a(q);
+    vector<char> a(q);
 
     for (auto& i : a)
     {
         cin >> i;
     }
 
-    sort(begin(a), end(a), gtByAbsoluteValue);
+    sort(begin(a), end(a), gtStrings);
 
     printVector(a);
 
