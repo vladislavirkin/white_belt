@@ -1,46 +1,84 @@
-//–еализуйте класс, поддерживающий набор строк в отсортированном пор€дке.
-// ласс должен содержать два публичных метода :
-//void AddString(const string& s)
-//vector<string> GetSortedStrings()
+//–еализуйте класс дл€ человека, поддерживающий историю изменений человеком своих фамилии и имени.
+//—читайте, что в каждый год может произойти не более одного изменени€ фамилии и 
+//не более одного изменени€ имени.
+//ѕри этом с течением времени могут открыватьс€ все новые факты из прошлого человека,
+//поэтому года в последовательных вызовах матеодов changeLastName && ChangeFirstName не об€заны возрастать.
+//√арантируетс€, что все имена и фамилии непусты.
+//—трока, возвращаема€ методом GetFullName, должна содержать разделЄнные одним пробелом им€ и фамилию 
+//человека по состо€нию на конец данного года.
+//≈сли к данному году не случилось ни одного изменени€ фамилии и имени, верните строку "Incognito".
+//≈сли к данному году случилось изменение фамилии, 
+//но не было ни одного изменени€ имени, верните "last_name with unknown first name".
+//≈сли к данному году случилось изменение имени, 
+//но не было ни одного изменени€ фамилии, верните "first_name with unknown last name".
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <map>
 
 using namespace std;
 
-
-class SortedStrings {
+class Person {
 public:
-    void AddString(const string& s) {
-        strings.push_back(s);
+    void ChangeFirstName(int year, const string& first_name) {
+        first_names[year] = first_name;
     }
-    vector<string> GetSortedStrings() {
-        sort(begin(strings), end(strings));
-        return strings;
+    void ChangeLastName(int year, const string& last_name) {
+        last_names[year] = last_name;
+    }
+    string GetFullName(int year) {
+        string first_name = getLastChanged(year, first_names);
+        string last_name = getLastChanged(year, last_names);
+        if (first_name.empty() && last_name.empty())
+            return "Incognito";
+        else {
+            if (first_name.empty())
+                return last_name + " with unknown first name";
+            else {
+                if (last_name.empty())
+                    return first_name + " with unknown last name";
+            }
+        }
+
+        return first_name + " " + last_name;
     }
 private:
-    vector<string> strings;
+    map<int, string> first_names;
+    map<int, string> last_names;
+
+    string getLastChanged(const int& year, map<int, string>& m) {
+        string result;
+        for (const auto& item : m) {
+            if (item.first <= year)
+                result = item.second;
+            else
+                break;
+        }
+
+        return result;
+    }
 };
 
-void PrintSortedStrings(SortedStrings& strings) {
-    for (const string& s : strings.GetSortedStrings()) {
-        cout << s << " ";
-    }
-    cout << endl;
-}
-
 int main() {
-    SortedStrings strings;
+    Person person;
 
-    strings.AddString("first");
-    strings.AddString("third");
-    strings.AddString("second");
-    PrintSortedStrings(strings);
+    person.ChangeFirstName(1965, "Polina");
+    person.ChangeLastName(1967, "Sergeeva");
+    for (int year : {1900, 1965, 1990}) {
+        cout << person.GetFullName(year) << endl;
+    }
 
-    strings.AddString("second");
-    PrintSortedStrings(strings);
+    person.ChangeFirstName(1970, "Appolinaria");
+    for (int year : {1969, 1970}) {
+        cout << person.GetFullName(year) << endl;
+    }
+
+    person.ChangeLastName(1968, "Volkova");
+    for (int year : {1969, 1970}) {
+        cout << person.GetFullName(year) << endl;
+    }
 
     return 0;
 }
