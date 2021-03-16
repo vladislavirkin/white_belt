@@ -22,22 +22,25 @@
 
 using namespace std;
 
-void printVector(const vector<char>& v) {
+void printVector(const vector<string>& v) {
     for (auto& i : v)
     {
         cout << i << " ";
     }
 }
 
-bool gtStrings(const char& i, const char& j) { 
-    return (tolower(i) < tolower(j)); 
+bool gtStrings(string first, string second) { 
+    transform(first.begin(), first.end(), first.begin(), ::tolower);
+    transform(second.begin(), second.end(), second.begin(), ::tolower);      
+
+    return first < second;
 }
 
 int main() {
     int q;
     cin >> q;
 
-    vector<char> a(q);
+    vector<string> a(q);
 
     for (auto& i : a)
     {
