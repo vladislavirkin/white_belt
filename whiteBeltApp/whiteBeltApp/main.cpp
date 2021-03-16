@@ -1,22 +1,15 @@
-//Реализуйте класс для человека, поддерживающий историю изменений человеком своих фамилии и имени.
-//Считайте, что в каждый год может произойти не более одного изменения фамилии и 
-//не более одного изменения имени.
-//При этом с течением времени могут открываться все новые факты из прошлого человека,
-//поэтому года в последовательных вызовах матеодов changeLastName && ChangeFirstName не обязаны возрастать.
-//Гарантируется, что все имена и фамилии непусты.
-//Строка, возвращаемая методом GetFullName, должна содержать разделённые одним пробелом имя и фамилию 
-//человека по состоянию на конец данного года.
-//Если к данному году не случилось ни одного изменения фамилии и имени, верните строку "Incognito".
-//Если к данному году случилось изменение фамилии, 
-//но не было ни одного изменения имени, верните "last_name with unknown first name".
-//Если к данному году случилось изменение имени, 
-//но не было ни одного изменения фамилии, верните "first_name with unknown last name".
+//Дополните класс из предыдущей задачи «Имена и фамилии — 1» методом GetFullNameWithHistory
+//В отличие от метода GetFullName, метод GetFullNameWithHistory должен вернуть не только последние имя и фамилию 
+//к концу данного года, но ещё и все предыдущие имена и фамилии в обратном хронологическом порядке.
+//Если текущие факты говорят о том, что человек два раза подряд 
+//изменил фамилию или имя на одно и то же, второе изменение при формировании истории нужно игнорировать.
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <map>
+#include <set>
 
 using namespace std;
 
@@ -31,6 +24,22 @@ public:
     string GetFullName(int year) {
         string first_name = getLastChanged(year, first_names);
         string last_name = getLastChanged(year, last_names);
+        if (first_name.empty() && last_name.empty())
+            return "Incognito";
+        else {
+            if (first_name.empty())
+                return last_name + " with unknown first name";
+            else {
+                if (last_name.empty())
+                    return first_name + " with unknown last name";
+            }
+        }
+
+        return first_name + " " + last_name;
+    }
+    string GetFullNameWithHistory(int year){
+        string first_name = getLastChangedWithHistory(year, first_names);
+        string last_name = getLastChangedWithHistory(year, last_names);
         if (first_name.empty() && last_name.empty())
             return "Incognito";
         else {
@@ -59,26 +68,110 @@ private:
 
         return result;
     }
+    string getLastChangedWithHistory(const int& year, map<int, string>& m) {
+        vector<string> history;        
+        for (const auto& item : m) {
+            if (item.first <= year)
+                history.push_back(item.second);
+            else
+                break;
+        }
+        reverse(begin(history), end(history));  
+        history = buildUniqueHistory(history);
+
+        string result;
+
+        if (history.size() > 0) {
+            result = history[0];
+            if (history.size() > 1) {                
+                    result += " (" + history[1];
+                if (history.size() > 2) {
+                    for (int i = 2; i < history.size(); ++i) {                        
+                            result += ", " + history[i];
+                    }
+                }
+                result += ")";
+            }
+        }                  
+
+        return result;
+    }    
+
+    vector<string> buildUniqueHistory(vector<string>& v) {
+        vector<string> result;
+
+        if (v.size() == 0)
+            return v;
+
+        result.push_back(v[0]);
+
+        for (auto& item : v) {
+            if (item != result.back())
+                result.push_back(item);
+        }
+
+        return result;
+    }
 };
 
 int main() {
     Person person;
 
+    //first test
+
+    /*person.ChangeFirstName(1900, "Eugene");
+    person.ChangeLastName(1900, "Sokolov");
+    person.ChangeLastName(1910, "Sokolov");
+    person.ChangeFirstName(1920, "Evgeny");
+    person.ChangeLastName(1930, "Sokolov");
+    cout << person.GetFullNameWithHistory(1940) << endl;
+    */
+    
+    //second test
+
     person.ChangeFirstName(1965, "Polina");
     person.ChangeLastName(1967, "Sergeeva");
     for (int year : {1900, 1965, 1990}) {
-        cout << person.GetFullName(year) << endl;
+        cout << person.GetFullNameWithHistory(year) << endl;
     }
 
     person.ChangeFirstName(1970, "Appolinaria");
     for (int year : {1969, 1970}) {
-        cout << person.GetFullName(year) << endl;
+        cout << person.GetFullNameWithHistory(year) << endl;
     }
 
     person.ChangeLastName(1968, "Volkova");
     for (int year : {1969, 1970}) {
-        cout << person.GetFullName(year) << endl;
+        cout << person.GetFullNameWithHistory(year) << endl;
     }
+    person.ChangeFirstName(1990, "Polina");
+    person.ChangeLastName(1990, "Volkova-Sergeeva");
+    cout << person.GetFullNameWithHistory(1990) << endl;
+  
+    person.ChangeFirstName(1966, "Pauline");
+    cout << person.GetFullNameWithHistory(1966) << endl;
+  
+    person.ChangeLastName(1960, "Sergeeva");
+    for (int year : {1960, 1967}) {
+    cout << person.GetFullNameWithHistory(year) << endl;
+    }
+  
+    person.ChangeLastName(1961, "Ivanova");
+    cout << person.GetFullNameWithHistory(1967) << endl;
+    
+
+    //third test
+
+    /*person.ChangeFirstName(1965, "Polina");
+    person.ChangeFirstName(1965, "Appolinaria");
+
+    person.ChangeLastName(1965, "Sergeeva");
+    person.ChangeLastName(1965, "Volkova");
+    person.ChangeLastName(1965, "Volkova-Sergeeva");
+
+    for (int year : {1964, 1965, 1966}) {
+        cout << person.GetFullNameWithHistory(year) << endl;
+    }*/
 
     return 0;
 }
