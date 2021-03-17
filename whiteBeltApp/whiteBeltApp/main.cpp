@@ -36,7 +36,7 @@ public:
         operation = new_operation;
         value = new_value;
     }
-    double Apply(double source_value) const {        
+    double Apply(double source_value) const {
         if (operation == '+') {
             return source_value + value;
         }
@@ -55,15 +55,21 @@ public:
         if (operation == '+') {
             operation = '-';
         }
-        if (operation == '-') {
-            operation = '+';
-        }
-        if (operation == '*') {
-            operation = '/';
-        }
-        if (operation == '/') {
-            operation = '*';
-        }        
+        else {
+            if (operation == '-') {
+                operation = '+';
+            }
+            else {
+                if (operation == '*') {
+                    operation = '/';
+                }
+                else {
+                    if (operation == '/') {
+                        operation = '*';
+                    }
+                }
+            }
+        }                     
     }
 private:
     char operation;
