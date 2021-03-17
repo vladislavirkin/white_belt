@@ -96,7 +96,7 @@ public:
             last_names[year] = last_name;
     }
 
-    string GetFullName(int year) {
+    string GetFullName(int year) const {
         if (year < birthday)
             return "No person";
 
@@ -114,7 +114,7 @@ public:
         return BuildFullName(first_name, last_name);
     }
 
-    string GetFullNameWithHistory(int year) {
+    string GetFullNameWithHistory(int year) const {
         if (year < birthday)
             return "No person";
 
@@ -126,10 +126,10 @@ public:
     }
 
 private:
-    vector<string> FindFirstNamesHistory(int year) {
+    vector<string> FindFirstNamesHistory(int year) const {
         return FindNamesHistory(first_names, year);
     }
-    vector<string> FindLastNamesHistory(int year) {
+    vector<string> FindLastNamesHistory(int year) const {
         return FindNamesHistory(last_names, year);
     }
 
