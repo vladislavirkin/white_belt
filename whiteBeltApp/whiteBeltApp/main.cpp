@@ -1,79 +1,122 @@
-//Допишите конструктор и структуры Specialization, Course, Week так, 
-//чтобы объект LectureTitle можно было бы корректно создатьс помошью right initialization,
-//и нельзя было создать с помощью wrong initialization
+//Реализуйте рассказанный на лекции класс Function, позволяющий создавать, 
+//вычислять и инвертировать функцию, состоящую из следующих элементарных операций :
+//
+//прибавить вещественное число x;
+//вычесть вещественное число x.
+//
+//При этом необходимо объявить константными все методы, которые по сути такими являются.
+//
+//Замечание
+//
+//Более детальное описание задачи с подробным разбором реализации вышеуказанного 
+//класса приводится в двух предшествующих видеолекциях.
+//На проверку пришлите файл, содержащий реализацию вышеуказанного класса Function.
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
-struct Specialization {
-    string value;
+struct Image {
+    double quality;
+    double freshness;
+    double rating;
+};
 
-    explicit Specialization(const string& new_value) {
+struct Params {
+    double a;
+    double b;
+    double c;
+};
+
+class FunctionPart {
+public:
+    FunctionPart(char new_operation, double new_value) {
+        operation = new_operation;
         value = new_value;
     }
-};
-
-struct Week {
-    string value;
-
-    explicit Week(const string& new_value) {
-        value = new_value;
+    double Apply(double source_value) const {        
+        if (operation == '+') {
+            return source_value + value;
+        }
+        if (operation == '-') {
+            return source_value - value;
+        }
+        if (operation == '*') {
+            return source_value * value;
+        }
+        if (operation == '/') {
+            return source_value / value;
+        }        
+        return 0;
     }
-};
-
-struct Course {
-    string value;
-
-    explicit Course(const string& new_value) {
-        value = new_value;
+    void Invert() {
+        if (operation == '+') {
+            operation = '-';
+        }
+        if (operation == '-') {
+            operation = '+';
+        }
+        if (operation == '*') {
+            operation = '/';
+        }
+        if (operation == '/') {
+            operation = '*';
+        }        
     }
+private:
+    char operation;
+    double value;
 };
 
-struct LectureTitle {
-    string specialization;
-    string course;
-    string week;
-
-    LectureTitle(const Specialization& new_specialization, const Course& new_course,
-        const Week& new_week) {
-        specialization = new_specialization.value;
-        course = new_course.value;
-        week = new_week.value;
+class Function {
+public:
+    void AddPart(char operation, double value) {
+        parts.push_back({ operation, value });
     }
+    double Apply(double value) const {
+        for (const FunctionPart& part : parts) {
+            value = part.Apply(value);
+        }
+        return value;
+    }
+    void Invert() {
+        for (FunctionPart& part : parts) {
+            part.Invert();
+        }
+        reverse(begin(parts), end(parts));
+    }
+private:
+    vector<FunctionPart> parts;
 };
 
-int main() {    
-    // right initialization
-    
-    LectureTitle title(
-        Specialization("C++"),
-        Course("White belt"),
-        Week("4th")
-    );
+Function MakeWeightFunction(const Params& params,
+    const Image& image) {
+    Function function;
+    function.AddPart('*', params.a);
+    function.AddPart('-', image.freshness * params.b);
+    function.AddPart('+', image.rating * params.c);
+    return function;
+}
 
-    // wrong initialization
+double ComputeImageWeight(const Params& params, const Image& image) {
+    Function function = MakeWeightFunction(params, image);
+    return function.Apply(image.quality);
+}
 
-    /*LectureTitle title("C++", "White belt", "4th");
+double ComputeQualityByWeight(const Params& params,
+    const Image& image,
+    double weight) {
+    Function function = MakeWeightFunction(params, image);
+    function.Invert();
+    return function.Apply(weight);
+}
 
-    LectureTitle title(string("C++"), string("White belt"), string("4th"));
-
-    LectureTitle title = { "C++", "White belt", "4th" };
-
-    LectureTitle title = { {"C++"}, {"White belt"}, {"4th"} };
-
-    LectureTitle title(
-        Course("White belt"),
-        Specialization("C++"),
-        Week("4th")
-    );
-
-    LectureTitle title(
-        Specialization("C++"),
-        Week("4th"),
-        Course("White belt")
-    );*/
-
-    return 0;    
+int main() {
+    Image image = { 10, 2, 6 };
+    Params params = { 4, 2, 6 };
+    cout << ComputeImageWeight(params, image) << endl;
+    cout << ComputeQualityByWeight(params, image, 52) << endl;
+    return 0;
 }
