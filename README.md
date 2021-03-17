@@ -1,2 +1,2 @@
-# coursera_white_belt
-c++ course on the coursera, white belt  
+# Искусство разработки на современном C++ Specialization
+c++ dev course on the coursera  
