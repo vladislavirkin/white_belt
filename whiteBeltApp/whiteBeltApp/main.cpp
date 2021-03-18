@@ -1,46 +1,77 @@
-﻿//В стандартном потоке дана одна строка, состоящая из N + 1 целых чисел.
-//Первым числом идёт само число N.Далее следуют ещё N чисел, обозначим их за массив A.
-//Между собой числа разделены пробелом.
-//
-//Отсортируйте массив А по модулю и выведите его в стандартный поток.
-//
-//Ограничения
-//
-//0 <= N <= 1000
-//- 1000000 <= A[i] <= 1000000
-
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cmath>
-
+﻿#include <iostream>
 using namespace std;
 
-void printVector(const vector<int>& v) {
-    for (auto& i : v)
-    {
-        cout << i << " ";
+class Rational {
+public:
+    Rational() {
+        // Реализуйте конструктор по умолчанию
     }
-}
 
-bool gtByAbsoluteValue(int i, int j) { 
-    return (abs(i) < abs(j)); 
-}
+    Rational(int numerator, int denominator) {
+        // Реализуйте конструктор
+    }
+
+    int Numerator() const {
+        // Реализуйте этот метод
+    }
+
+    int Denominator() const {
+        // Реализуйте этот метод
+    }
+
+private:
+    // Добавьте поля
+};
 
 int main() {
-    int q;
-    cin >> q;
-
-    vector<int> a(q);
-
-    for (auto& i : a)
     {
-        cin >> i;
+        const Rational r(3, 10);
+        if (r.Numerator() != 3 || r.Denominator() != 10) {
+            cout << "Rational(3, 10) != 3/10" << endl;
+            return 1;
+        }
     }
 
-    sort(begin(a), end(a), gtByAbsoluteValue);
+    {
+        const Rational r(8, 12);
+        if (r.Numerator() != 2 || r.Denominator() != 3) {
+            cout << "Rational(8, 12) != 2/3" << endl;
+            return 2;
+        }
+    }
 
-    printVector(a);
+    {
+        const Rational r(-4, 6);
+        if (r.Numerator() != -2 || r.Denominator() != 3) {
+            cout << "Rational(-4, 6) != -2/3" << endl;
+            return 3;
+        }
+    }
 
+    {
+        const Rational r(4, -6);
+        if (r.Numerator() != -2 || r.Denominator() != 3) {
+            cout << "Rational(4, -6) != -2/3" << endl;
+            return 3;
+        }
+    }
+
+    {
+        const Rational r(0, 15);
+        if (r.Numerator() != 0 || r.Denominator() != 1) {
+            cout << "Rational(0, 15) != 0/1" << endl;
+            return 4;
+        }
+    }
+
+    {
+        const Rational defaultConstructed;
+        if (defaultConstructed.Numerator() != 0 || defaultConstructed.Denominator() != 1) {
+            cout << "Rational() != 0/1" << endl;
+            return 5;
+        }
+    }
+
+    cout << "OK" << endl;
     return 0;
 }
