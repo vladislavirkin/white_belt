@@ -52,6 +52,23 @@ private:
     }
 };
 
+Rational operator+(const Rational& lhs, const Rational& rhs) {
+    int numerator = lhs.Numerator() * rhs.Denominator() + rhs.Numerator() * lhs.Denominator();
+    int denominator = lhs.Denominator() * rhs.Denominator();
+    return Rational(numerator, denominator);
+}
+
+Rational operator-(const Rational& lhs, const Rational& rhs) {
+    int numerator = lhs.Numerator() * rhs.Denominator() - rhs.Numerator() * lhs.Denominator();
+    int denominator = lhs.Denominator() * rhs.Denominator();
+    return Rational(numerator, denominator);
+}
+
+bool operator==(const Rational& lhs, const Rational& rhs) {
+    Rational result = lhs - rhs;
+    return (result.Numerator() == 0);
+}
+
 int main() {
     {
         Rational r1(4, 6);
