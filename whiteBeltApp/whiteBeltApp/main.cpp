@@ -1,88 +1,46 @@
-//ќпределите структуру Ђ—тудентї со следующими пол€ми : им€, фамили€, день, мес€ц и год рождени€.—оздайте вектор из таких структур, заполните его из входных данных и затем по запросам выведите нужные пол€.„тение и запись данных в этой задаче производитс€ с использованием стандартных потоков.
+//¬ стандартном потоке дана одна строка, состо€ща€ из N + 1 целых чисел.
+//ѕервым числом идЄт само число N.ƒалее следуют ещЄ N чисел, обозначим их за массив A.
+//ћежду собой числа разделены пробелом.
 //
-//‘ормат ввода
+//ќтсортируйте массив ј по модулю и выведите его в стандартный поток.
 //
-//ѕерва€ строка содержит одно целое число N от 0 до 10000 Ч число студентов.
+//ќграничени€
 //
-//ƒалее идут N строк, кажда€ из которых содержит две строки длиной от 1 до 15 символов Ч 
-//им€ и фамилию очередного студента, и три целых числа от 0 до 1000000000 Ч день, мес€ц и год рождени€.
-//
-//—ледующа€ строка содержит одно целое число M от 0 до 10000 Ч число запросов.
-//
-//—ледующие M строк содержат строку длиной от 1 до 15 символов Ч запрос, 
-//и целое число от 1 до 1000000000 Ч номер студента(нумераци€ начинаетс€ с 1).
-//
-//‘ормат вывода
-//
-//ƒл€ запроса вида name K, где K от 1 до N, выведите через пробел им€ и фамилию K - го студента.
-//
-//ƒл€ запроса вида date K, где K от 1 до N, выведите через точку день, мес€ц и 
-//год рождени€ K - го студента.
-//
-//ƒл€ остальных запросов выведите bad request.
-//
-//NB: неверные запросы могут выходить за границы, указанные дл€ данных.
+//0 <= N <= 1000
+//- 1000000 <= A[i] <= 1000000
 
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <iomanip>
-#include <map>
 #include <vector>
+#include <algorithm>
+#include <cmath>
 
 using namespace std;
 
-struct Student {
-    string first_name;
-    string last_name;
+void printVector(const vector<int>& v) {
+    for (auto& i : v)
+    {
+        cout << i << " ";
+    }
+}
 
-    int day;
-    int month;
-    int year;
-};
+bool gtByAbsoluteValue(int i, int j) { 
+    return (abs(i) < abs(j)); 
+}
 
 int main() {
-    int n;
-    cin >> n;
+    int q;
+    cin >> q;
 
-    string first_name, last_name;
-    int day, month, year;
-    vector<Student> students;
+    vector<int> a(q);
 
-    for (size_t i = 0; i < n; ++i) {
-        cin >> first_name >> last_name >> day >> month >> year;
-
-        students.push_back(Student{
-          first_name,
-          last_name,
-          day,
-          month,
-          year
-            });
+    for (auto& i : a)
+    {
+        cin >> i;
     }
 
-    int m;
-    cin >> m;
-    string query;
-    int student_number;
+    sort(begin(a), end(a), gtByAbsoluteValue);
 
-    for (int i = 0; i < m; ++i) {
-        cin >> query >> student_number;
-        --student_number;
-
-        if (query == "name" && student_number >= 0 && student_number < n) {
-            cout << students[student_number].first_name << " "
-                << students[student_number].last_name << endl;
-        }
-        else if (query == "date" && student_number >= 0 && student_number < n) {
-            cout << students[student_number].day << "."
-                << students[student_number].month << "."
-                << students[student_number].year << endl;
-        }
-        else {
-            cout << "bad request" << endl;
-        }
-    }
+    printVector(a);
 
     return 0;
 }
