@@ -135,7 +135,7 @@ istream& operator>>(istream& stream, Rational& rational) {
     if (stream.peek() == -1)
         return stream;
     stream >> denominator;
-    if (denominator > 0)   
+    if (denominator >= 0)   
         rational.Set(numerator, denominator);        
 
     return stream;  
@@ -148,6 +148,23 @@ ostream& operator<<(ostream& stream, const Rational& rational) {
 
 int main() {
     try {
+        Rational lhs, rhs;
+        string cmd;
+
+        cin >> lhs >> cmd >> rhs;
+
+        if (cmd == "+") {
+            cout << lhs + rhs;
+        }
+        if (cmd == "-") {
+            cout << lhs - rhs;
+        }
+        if (cmd == "*") {
+            cout << lhs * rhs;
+        }
+        if (cmd == "/") {
+            cout << lhs / rhs;
+        }
                 
         return 0;
     }
