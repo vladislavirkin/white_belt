@@ -1,179 +1,53 @@
 #include <iostream>
-#include <numeric>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <set>
-#include <vector>
-#include <map>
 #include <exception>
+#include <string>
 using namespace std;
 
-class Rational {
+string AskTimeServer() {
+    /* Для тестирования повставляйте сюда код, реализующий различное поведение этой функии:
+       * нормальный возврат строкового значения
+       * выброс исключения system_error
+       * выброс другого исключения с сообщением.
+    */
+
+    return "";
+}
+
+class TimeServer {
 public:
-    Rational() {
-        p = 0;
-        q = 1;
-        reduceFraction();
-    }
+    string GetCurrentTime() {
+        /* Реализуйте этот метод:
+          * если AskTimeServer() вернула значение, запишите его в last_fetched_time и верните
+          * если AskTimeServer() бросила исключение system_error, верните текущее значение
+          поля last_fetched_time
+          * если AskTimeServer() бросила другое исключение, пробросьте его дальше.
+        */
 
-    Rational(int numerator, int denominator) {
-        p = numerator;
-        q = denominator;
-        validateFraction();
-        reduceFraction();
-    }
-
-    int Numerator() const {
-        return p;
-    }
-
-    int Denominator() const {
-        return q;
-    }
-
-    void Set(int numerator, int denominator) {
-        p = numerator;
-        q = denominator;
-        validateFraction();
-        reduceFraction();
-    }
-
-    void SetNumerator(const int& numerator) {
-        p = numerator;
-        validateFraction();
-        reduceFraction();
-    }
-
-    void SetDenominator(const int& denominator) {
-        q = denominator;
-        validateFraction();
-        reduceFraction();
+        try
+        {
+            last_fetched_time = AskTimeServer();
+            return last_fetched_time;
+        }
+        catch (const system_error& e)
+        {
+            return last_fetched_time;
+        }
+        catch (const std::exception& e)
+        {
+            throw e;
+        }       
     }
 
 private:
-    int p, q;
-
-    void validateFraction() {
-        if (q == 0) {
-            throw invalid_argument("q = 0");
-        }
-
-        if (p * q > 0) {
-            p = abs(p);
-            q = abs(q);
-        }
-        if (q < 0 && p > 0) {
-            p = -1 * p;
-            q = abs(q);
-        }
-        if (p == 0) {
-            q = 1;
-        }
-    }
-
-    void reduceFraction() {
-        int GCD = 0;
-        while (GCD != 1) {
-            GCD = gcd(p, q);
-            p /= GCD;
-            q /= GCD;
-        }
-    }
+    string last_fetched_time = "00:00:00";
 };
 
-Rational operator+(const Rational& lhs, const Rational& rhs) {
-    int numerator = lhs.Numerator() * rhs.Denominator() + rhs.Numerator() * lhs.Denominator();
-    int denominator = lhs.Denominator() * rhs.Denominator();
-    return Rational(numerator, denominator);
-}
-
-Rational operator-(const Rational& lhs, const Rational& rhs) {
-    int numerator = lhs.Numerator() * rhs.Denominator() - rhs.Numerator() * lhs.Denominator();
-    int denominator = lhs.Denominator() * rhs.Denominator();
-    return Rational(numerator, denominator);
-}
-
-Rational operator/(const Rational& lhs, const Rational& rhs) {
-    if (rhs.Numerator() == 0) {
-        throw domain_error("/0");
-    }
-    int numerator = lhs.Numerator() * rhs.Denominator();
-    int denominator = rhs.Numerator() * lhs.Denominator();
-    return Rational(numerator, denominator);
-}
-
-Rational operator*(const Rational& lhs, const Rational& rhs) {
-    int numerator = lhs.Numerator() * rhs.Numerator();
-    int denominator = lhs.Denominator() * rhs.Denominator();
-    return Rational(numerator, denominator);
-}
-
-bool operator==(const Rational& lhs, const Rational& rhs) {
-    Rational result = lhs - rhs;
-    return (result.Numerator() == 0);
-}
-
-bool operator<(const Rational& lhs, const Rational& rhs) {
-    Rational result = lhs - rhs;
-    return (result.Numerator() < 0);
-}
-
-bool is_stream_empty(istream& pFile)
-{
-    return pFile.peek() == istream::traits_type::eof();
-}
-
-istream& operator>>(istream& stream, Rational& rational) {   
-    int numerator, denominator;    
-
-    stream >> numerator;
-    if (stream.peek() != '/')
-        return stream;
-    stream.ignore(1);
-    if (stream.peek() == -1)
-        return stream;
-    stream >> denominator;
-    if (denominator >= 0)   
-        rational.Set(numerator, denominator);        
-
-    return stream;  
-}
-
-ostream& operator<<(ostream& stream, const Rational& rational) {
-    stream << rational.Numerator() << "/" << rational.Denominator();
-    return stream;
-}
-
-int main() {
+int main() {    
+    TimeServer ts;
     try {
-        Rational lhs, rhs;
-        string cmd;
-
-        cin >> lhs >> cmd >> rhs;
-
-        if (cmd == "+") {
-            cout << lhs + rhs;
-        }
-        if (cmd == "-") {
-            cout << lhs - rhs;
-        }
-        if (cmd == "*") {
-            cout << lhs * rhs;
-        }
-        if (cmd == "/") {
-            cout << lhs / rhs;
-        }
-                
-        return 0;
+        cout << ts.GetCurrentTime() << endl;
+    } catch (exception& e) {
+        cout << "Exception got: " << e.what() << endl;
     }
-    catch (invalid_argument&) {
-        cout << "Invalid argument";
-    }
-    catch (domain_error&) {
-        cout << "Division by zero";
-    }    
-
     return 0;
 }
