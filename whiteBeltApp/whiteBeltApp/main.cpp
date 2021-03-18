@@ -31,11 +31,7 @@ public:
         catch (const system_error& e)
         {
             return last_fetched_time;
-        }
-        catch (const std::exception& e)
-        {
-            throw e;
-        }       
+        }               
     }
 
 private:
