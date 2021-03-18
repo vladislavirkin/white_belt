@@ -1,26 +1,55 @@
-﻿#include <iostream>
+#include <iostream>
+#include <numeric>
 using namespace std;
 
 class Rational {
 public:
     Rational() {
-        // Реализуйте конструктор по умолчанию
+        p = 0;
+        q = 1;
+        reduceFraction();
     }
 
     Rational(int numerator, int denominator) {
-        // Реализуйте конструктор
+        p = numerator;
+        q = denominator;
+        validateFraction();
+        reduceFraction();
     }
 
     int Numerator() const {
-        // Реализуйте этот метод
+        return p;
     }
 
     int Denominator() const {
-        // Реализуйте этот метод
+        return q;
     }
 
 private:
-    // Добавьте поля
+    int p, q;
+
+    void validateFraction() {
+        if (p * q > 0) {
+            p = abs(p);
+            q = abs(q);
+        }
+        if (q < 0 && p > 0) {
+            p = -1 * p;
+            q = abs(q);
+        }
+        if (p == 0) {
+            q = 1;
+        }
+    }
+
+    void reduceFraction() {
+        int GCD = 0;
+        while (GCD != 1) {
+            GCD = gcd(p, q);
+            p /= GCD;
+            q /= GCD;
+        }
+    }
 };
 
 int main() {
