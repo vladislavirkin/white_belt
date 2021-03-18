@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <set>
+#include <vector>
+#include <map>
 using namespace std;
 
 class Rational {
@@ -102,6 +105,11 @@ Rational operator*(const Rational& lhs, const Rational& rhs) {
 bool operator==(const Rational& lhs, const Rational& rhs) {
     Rational result = lhs - rhs;
     return (result.Numerator() == 0);
+}
+
+bool operator<(const Rational& lhs, const Rational& rhs) {
+    Rational result = lhs - rhs;
+    return (result.Numerator() < 0);
 }
 
 bool is_stream_empty(istream& pFile)
@@ -242,7 +250,7 @@ int main() {
 
     // PART 4
 
-    {
+    /*{
         ostringstream output;
         output << Rational(-6, 8);
         if (output.str() != "-3/4") {
@@ -304,11 +312,11 @@ int main() {
 
             return 6;
         }
-    }
+    }*/
 
     // PART 5
 
-    /*{
+    {
         const set<Rational> rs = {{1, 2}, {1, 25}, {3, 4}, {3, 4}, {1, 2}};
         if (rs.size() != 3) {
             cout << "Wrong amount of items in the set" << endl;
@@ -336,7 +344,7 @@ int main() {
             cout << "Wrong amount of items in the map" << endl;
             return 3;
         }
-    }*/
+    }
 
     cout << "OK" << endl;
     return 0;
